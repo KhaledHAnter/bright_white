@@ -1,4 +1,3 @@
-import 'package:bright_white/core/helpers/employee_storage_helper.dart';
 import 'package:bright_white/core/helpers/extentions.dart';
 import 'package:bright_white/core/routing/routes.dart';
 import 'package:bright_white/core/widgets/app_button.dart';
@@ -24,32 +23,27 @@ class AuthForm extends StatelessWidget {
 
   late String otpCode;
 
-  Future<bool> _checkEmployeeCode(String code) async {
-    EmployeeStorageHelper hlper = EmployeeStorageHelper();
-    List<EmployModel>? employeeList = await hlper.loadEmployeeList();
-
-    if (employeeList.isNotEmpty) {
-      // Check if any employee has the matching code
-      for (var employee in employeeList) {
-        if (employee.code == code) {
-          return true;
-        }
+  Future<EmployModel?> _checkEmployeeCode(String code) async {
+    for (var employee in employeeList) {
+      if (employee.code == code) {
+        return employee;
       }
     }
 
-    return false;
+    return null;
   }
 
   void navigationOptions(BuildContext context) async {
     if (otpCode.isNotEmpty) {
-      bool isCodeValid = await _checkEmployeeCode(otpCode);
-      if (isCodeValid) {
+      EmployModel? employ = await _checkEmployeeCode(otpCode);
+      if (employ != null) {
         // If valid, perform some action
         context.pushReplacementNamed(Routes.homeView);
       } else {
         // If not valid, show an error
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
+              duration: Duration(seconds: 1),
               backgroundColor: Colors.red,
               content: Text(
                 'Invalid employee code. Please try again.',
@@ -89,7 +83,7 @@ class AuthForm extends StatelessWidget {
   Widget _buildPinCodeField(BuildContext context) {
     int pinLength = 6;
     double pinWidth =
-        (MediaQuery.sizeOf(context).width / 3) / (pinLength + 1) - pinLength;
+        ((MediaQuery.sizeOf(context).width / 3) / (pinLength + 1)) - pinLength;
     return PinCodeTextField(
       appContext: context,
       autoFocus: true,
