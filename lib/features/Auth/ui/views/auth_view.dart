@@ -22,7 +22,7 @@ class AuthView extends StatelessWidget {
               child: Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage(Assets.imagesBanner2),
+                      image: AssetImage(Assets.imagesBanner3),
                       fit: BoxFit.contain),
                 ),
               ),

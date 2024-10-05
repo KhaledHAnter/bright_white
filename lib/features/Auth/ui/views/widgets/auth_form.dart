@@ -1,29 +1,34 @@
-import 'dart:convert';
-import 'dart:developer';
+import 'package:bright_white/core/helpers/employee_storage_helper.dart';
 import 'package:bright_white/core/helpers/extentions.dart';
 import 'package:bright_white/core/routing/routes.dart';
 import 'package:bright_white/core/widgets/app_button.dart';
 import 'package:bright_white/features/Auth/data/models/employ_model.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gap/gap.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AuthForm extends StatelessWidget {
   AuthForm({super.key});
+  final List<EmployModel> employeeList = [
+    const EmployModel(
+      name: 'Mohamed Anter',
+      code: '922002',
+      role: 'Manager',
+    ),
+    const EmployModel(
+      name: 'Mahmoud El-Morsy',
+      code: '205080',
+      role: 'Employee',
+    ),
+  ];
+
   late String otpCode;
 
   Future<bool> _checkEmployeeCode(String code) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? employeeListJson = prefs.getStringList('employeeList');
+    EmployeeStorageHelper hlper = EmployeeStorageHelper();
+    List<EmployModel>? employeeList = await hlper.loadEmployeeList();
 
-    if (employeeListJson != null) {
-      List<EmployModel> employeeList = employeeListJson.map((employeeJson) {
-        Map<String, dynamic> json = jsonDecode(employeeJson);
-        return EmployModel.fromJson(json);
-      }).toList();
-      log(employeeList[0].code.toString());
-
+    if (employeeList.isNotEmpty) {
       // Check if any employee has the matching code
       for (var employee in employeeList) {
         if (employee.code == code) {
@@ -36,21 +41,22 @@ class AuthForm extends StatelessWidget {
   }
 
   void navigationOptions(BuildContext context) async {
-    bool isCodeValid = await _checkEmployeeCode(otpCode);
-    if (isCodeValid) {
-      // If valid, perform some action
-      context.pushReplacementNamed(Routes.homeView);
-    } else {
-      // If not valid, show an error
-      print("Invalid code.");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text(
-              'Invalid employee code. Please try again.',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            )),
-      );
+    if (otpCode.isNotEmpty) {
+      bool isCodeValid = await _checkEmployeeCode(otpCode);
+      if (isCodeValid) {
+        // If valid, perform some action
+        context.pushReplacementNamed(Routes.homeView);
+      } else {
+        // If not valid, show an error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(
+                'Invalid employee code. Please try again.',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              )),
+        );
+      }
     }
   }
 
@@ -90,7 +96,7 @@ class AuthForm extends StatelessWidget {
       cursorColor: Colors.black,
       keyboardType: TextInputType.number,
       length: pinLength,
-      obscureText: false,
+      obscureText: true,
       animationType: AnimationType.scale,
       pinTheme: PinTheme(
         shape: PinCodeFieldShape.box,
