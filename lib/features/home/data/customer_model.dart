@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class CustomerModel {
   String name;
   String phone;

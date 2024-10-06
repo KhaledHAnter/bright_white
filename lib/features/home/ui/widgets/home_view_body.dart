@@ -1,19 +1,19 @@
 import 'package:bright_white/core/helpers/customer_storage_helper.dart';
 import 'package:bright_white/core/helpers/validator_utils/validator_utils.dart';
 import 'package:bright_white/features/home/data/customer_model.dart';
+import 'package:bright_white/features/home/ui/widgets/customer_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:bright_white/core/theming/colors.dart';
 import 'package:bright_white/core/theming/styles.dart';
 import 'package:bright_white/generated/l10n.dart';
-// import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show FilteringTextInputFormatter, rootBundle;
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -48,6 +48,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     String name = '';
     String phone = '';
     String moneyText = '';
+
     final GlobalKey<FormState> formKey = GlobalKey();
 
     await showDialog(
@@ -57,6 +58,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
           title: const Text('إضافــة عميــــل'),
           content: Form(
             key: formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -74,6 +76,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                 TextFormField(
                   validator: ValidatorUtils.requiredField,
                   textInputAction: TextInputAction.next,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     labelText: 'رقــم الهاتــــف',
                   ),
@@ -84,6 +87,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                 ),
                 TextFormField(
                   validator: ValidatorUtils.requiredField,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     labelText: 'المبـلـــــغ',
                   ),
@@ -305,6 +309,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                 TextFormField(
                   validator: ValidatorUtils.requiredField,
                   autofocus: true,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     labelText: 'قيمة المعاملة',
@@ -404,21 +409,33 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     });
   }
 
-  Future<void> _editCustomerPhoneNumber(CustomerModel customer) async {
+  Future<void> _editCustomerDetails(CustomerModel customer) async {
+    String updatedName = customer.name;
     String updatedPhone = customer.phone;
 
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('تعديل رقم الهاتف ل ${customer.name}'),
+          title: const Text('تعديل بيانات العميل'),
           content: Form(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
                   autofocus: true,
+                  initialValue: customer.name,
+                  decoration: const InputDecoration(
+                    labelText: 'الاسم الجديد',
+                  ),
+                  onChanged: (value) {
+                    updatedName = value;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
                   initialValue: customer.phone,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     labelText: 'رقم الهاتف الجديد',
                   ),
@@ -439,8 +456,9 @@ class _HomeViewBodyState extends State<HomeViewBody> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (updatedPhone.isNotEmpty) {
+                if (updatedName.isNotEmpty && updatedPhone.isNotEmpty) {
                   setState(() {
+                    customer.name = updatedName;
                     customer.phone = updatedPhone;
                   });
 
@@ -729,7 +747,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     showTransactions: _showTransactions,
                     addTransaction: _addTransaction,
                     deleteCustomer: _deleteCustomer,
-                    editCustomerPhoneNumber: _editCustomerPhoneNumber,
+                    editCustomerPhoneNumber: _editCustomerDetails,
                     sendWhatsAppMessage: _sendWhatsAppMessage,
                   );
                 }
@@ -746,116 +764,12 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                 showTransactions: _showTransactions,
                 addTransaction: _addTransaction,
                 deleteCustomer: _deleteCustomer,
-                editCustomerPhoneNumber: _editCustomerPhoneNumber,
+                editCustomerPhoneNumber: _editCustomerDetails,
                 sendWhatsAppMessage: _sendWhatsAppMessage,
               );
             }
           })
         ],
-      ),
-    );
-  }
-}
-
-class CustomersListView extends StatelessWidget {
-  List<CustomerModel> customers;
-  void Function(CustomerModel customer) showTransactions;
-  void Function(CustomerModel customer) addTransaction;
-  void Function(CustomerModel customer) editCustomerPhoneNumber;
-  void Function(CustomerModel customer) deleteCustomer;
-  void Function(CustomerModel customer) sendWhatsAppMessage;
-  CustomersListView({
-    super.key,
-    required this.customers,
-    required this.showTransactions,
-    required this.addTransaction,
-    required this.deleteCustomer,
-    required this.editCustomerPhoneNumber,
-    required this.sendWhatsAppMessage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: customers.length,
-        itemBuilder: (context, index) {
-          final customer = customers[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Text(
-                  customer.name,
-                  style: Styles.semiBold18,
-                ),
-                const Spacer(),
-                Text(
-                  customer.phone,
-                  style: Styles.semiBold18,
-                ),
-                const Spacer(),
-                Text(
-                  "${NumberFormat('#,##0').format(customer.money)} ج.م",
-                  style: Styles.semiBold18,
-                ),
-                const Spacer(
-                  flex: 2,
-                ),
-                Row(
-                  children: <Widget>[
-                    IconButton(
-                      onPressed: () {
-                        showTransactions(customer);
-                      },
-                      icon: const Icon(FontAwesomeIcons.list),
-                    ),
-                    const Gap(16),
-                    IconButton(
-                      onPressed: () {
-                        addTransaction(customer);
-                      },
-                      icon: const Icon(FontAwesomeIcons.plusMinus),
-                    ),
-                    const Gap(16),
-                    IconButton(
-                      onPressed: customer.phone.length == 11
-                          ? () {
-                              sendWhatsAppMessage(customer);
-                            }
-                          : null,
-                      icon: Icon(
-                        FontAwesomeIcons.whatsapp,
-                        color:
-                            customer.phone.length == 11 ? Colors.green : null,
-                      ),
-                    ),
-                    const Gap(16),
-                    IconButton(
-                      onPressed: () {
-                        editCustomerPhoneNumber(customer);
-                      },
-                      icon: const Icon(
-                        FontAwesomeIcons.pen,
-                      ),
-                    ),
-                    const Gap(16),
-                    IconButton(
-                      onPressed: () {
-                        deleteCustomer(customer);
-                      },
-                      icon: const Icon(
-                        FontAwesomeIcons.trashCan,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-                // const Spacer(),
-              ],
-            ),
-          );
-        },
       ),
     );
   }
