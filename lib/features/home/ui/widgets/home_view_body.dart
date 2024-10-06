@@ -144,52 +144,80 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     _loadCustomers();
   }
 
-  Future<void> _deleteCustomer(String phone) async {
+  Future<void> _deleteCustomer(CustomerModel customer) async {
+    String confirmationName = '';
+
     // Show a confirmation dialog before deleting the customer
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('تأكيد الحذف'),
-          content: const Text(
-              'هل أنت متأكد أنك تريد حذف هذا العميل؟ لا يمكن التراجع عن هذا الإجراء.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pop(); // Return false if cancel is pressed
-              },
-              child: const Text('إلغـــاء'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                // Return true if confirm is pressed
-                // Remove the customer from the main list
-                setState(() {
-                  _customers.removeWhere((customer) => customer.phone == phone);
-                  _filteredCustomers
-                      .removeWhere((customer) => customer.phone == phone);
-                });
-
-                // Save the updated customer list to SharedPreferences
-                await _storageHelper.saveCustomerList(_customers);
-
-                // Reload customers to ensure consistency
-                _loadCustomers();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, // Red color to indicate deletion
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('تأكيد الحذف'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'هل أنت متأكد أنك تريد حذف هذا العميل؟ لا يمكن التراجع عن هذا الإجراء.',
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      labelText: 'اكتب اسم العميل للتأكيد',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        confirmationName = value;
+                      });
+                    },
+                  ),
+                ],
               ),
-              child: const Text(
-                'حذف',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cancel deletion
+                  },
+                  child: const Text('إلغـــاء'),
+                ),
+                ElevatedButton(
+                  onPressed: confirmationName == customer.name
+                      ? () async {
+                          Navigator.of(context).pop(true);
+                          setState(() {
+                            _customers
+                                .removeWhere((c) => c.phone == customer.phone);
+                            _filteredCustomers
+                                .removeWhere((c) => c.phone == customer.phone);
+                          });
+
+                          // Save the updated customer list to SharedPreferences
+                          await _storageHelper.saveCustomerList(_customers);
+
+                          // Reload customers to ensure consistency
+                          _loadCustomers(); // Confirm deletion
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Colors.red, // Red color to indicate deletion
+                  ),
+                  child: const Text(
+                    'حذف',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
+
+    // If the user confirms the deletion, proceed to delete the customer
   }
 
   void _showTransactions(CustomerModel customer) {
@@ -712,7 +740,7 @@ class CustomersListView extends StatelessWidget {
   void Function(CustomerModel customer) showTransactions;
   void Function(CustomerModel customer) addTransaction;
   void Function(CustomerModel customer) editCustomerPhoneNumber;
-  void Function(String) deleteCustomer;
+  void Function(CustomerModel customer) deleteCustomer;
   CustomersListView(
       {super.key,
       required this.customers,
@@ -785,7 +813,7 @@ class CustomersListView extends StatelessWidget {
                     const Gap(16),
                     IconButton(
                       onPressed: () {
-                        deleteCustomer(customer.phone);
+                        deleteCustomer(customer);
                       },
                       icon: const Icon(
                         FontAwesomeIcons.trashCan,
