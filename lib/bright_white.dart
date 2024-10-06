@@ -11,7 +11,6 @@ class BrightWhite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // home: LoginView(),
       debugShowCheckedModeBanner: false,
       title: "Doc Adavanced Flutter",
       theme: ThemeData(
