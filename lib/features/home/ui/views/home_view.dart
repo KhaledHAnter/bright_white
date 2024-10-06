@@ -1,3 +1,4 @@
+import 'package:bright_white/features/home/ui/widgets/home_view_body.dart';
 import 'package:bright_white/features/home/ui/widgets/tabs_expanded.dart';
 import 'package:flutter/material.dart';
 
@@ -22,17 +23,6 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class HomeViewBody extends StatelessWidget {
-  const HomeViewBody({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [],
     );
   }
 }

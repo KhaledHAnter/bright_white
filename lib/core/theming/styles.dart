@@ -13,6 +13,11 @@ class Styles {
     fontWeight: FontWeightsHelper.bold,
     color: Colors.black,
   );
+  static TextStyle bold20 = const TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeightsHelper.bold,
+    color: Colors.black,
+  );
   static TextStyle bold24Blue = const TextStyle(
     fontSize: 24,
     fontWeight: FontWeightsHelper.bold,

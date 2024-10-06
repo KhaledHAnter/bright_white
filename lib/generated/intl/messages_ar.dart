@@ -20,10 +20,28 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
+  static String m0(Total) => "الإجمــالــــي  :  ${Total}  ج.م";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "auth_button": MessageLookupByLibrary.simpleMessage("متابعة"),
         "auth_hello":
-            MessageLookupByLibrary.simpleMessage("مرحباً، أدخل رقم الموظف!")
+            MessageLookupByLibrary.simpleMessage("مرحباً، أدخل رقم الموظف!"),
+        "home_actions": MessageLookupByLibrary.simpleMessage(
+            "      المهــــــــــــام      "),
+        "home_lbl":
+            MessageLookupByLibrary.simpleMessage("قائمــــة الديــــون"),
+        "home_money": MessageLookupByLibrary.simpleMessage("المبلــــــغ"),
+        "home_name": MessageLookupByLibrary.simpleMessage("الإســــــم"),
+        "home_newEntry": MessageLookupByLibrary.simpleMessage("إضــافــــة"),
+        "home_phoneNum":
+            MessageLookupByLibrary.simpleMessage("رقــم التلفــــــون"),
+        "home_search": MessageLookupByLibrary.simpleMessage("بحث"),
+        "home_tab1": MessageLookupByLibrary.simpleMessage("الديــــــــــــون"),
+        "home_tab2":
+            MessageLookupByLibrary.simpleMessage("قريــبـــــــــــــاً"),
+        "home_tab3":
+            MessageLookupByLibrary.simpleMessage("قريــبـــــــــــــاً"),
+        "home_total": m0
       };
 }

@@ -1,6 +1,19 @@
 
 {
-    
     "auth_hello": "Hello, Enter your employee number!",
-    "auth_button": "Continue"
+    "auth_button": "Continue",
+
+    "home_tab1" : "Depets",
+    "home_tab2" : "Soon",
+    "home_tab3" : "Soon",
+    "home_lbl" : "Depets List",
+    "home_search" : "Search",
+    "home_total" : "Total  :  {Total}  LE.",
+    "home_newEntry" : "New Entry",
+    "home_name" : "Name",
+    "home_phoneNum" : "Phone",
+    "home_money" : "Money",
+    "home_actions" : "Actions"
+    
+
 }

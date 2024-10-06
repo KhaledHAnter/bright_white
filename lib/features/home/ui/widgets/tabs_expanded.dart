@@ -1,6 +1,7 @@
 import 'package:bright_white/core/theming/colors.dart';
 import 'package:bright_white/core/theming/styles.dart';
 import 'package:bright_white/core/widgets/circle_logo.dart';
+import 'package:bright_white/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -32,7 +33,7 @@ class TabsExpanded extends StatelessWidget {
               ),
               const Gap(12),
               Text(
-                "الديــــــــــــون",
+                S.of(context).home_tab1,
                 style: Styles.bold24,
               ),
             ],
@@ -42,7 +43,7 @@ class TabsExpanded extends StatelessWidget {
             children: <Widget>[
               const Gap(22),
               Text(
-                "قريــبـــــــــــــاً",
+                S.of(context).home_tab2,
                 style: Styles.bold24,
               ),
             ],
@@ -52,7 +53,7 @@ class TabsExpanded extends StatelessWidget {
             children: <Widget>[
               const Gap(22),
               Text(
-                "قريــبـــــــــــــاً",
+                S.of(context).home_tab3,
                 style: Styles.bold24,
               ),
             ],
@@ -62,9 +63,3 @@ class TabsExpanded extends StatelessWidget {
     );
   }
 }
-
-
-
-// IconButton(
-//             onPressed: () => context.pushNamed(Routes.authView),
-//             icon: const Icon(Icons.home))

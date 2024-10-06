@@ -69,6 +69,116 @@ class S {
       args: [],
     );
   }
+
+  /// `Depets`
+  String get home_tab1 {
+    return Intl.message(
+      'Depets',
+      name: 'home_tab1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Soon`
+  String get home_tab2 {
+    return Intl.message(
+      'Soon',
+      name: 'home_tab2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Soon`
+  String get home_tab3 {
+    return Intl.message(
+      'Soon',
+      name: 'home_tab3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Depets List`
+  String get home_lbl {
+    return Intl.message(
+      'Depets List',
+      name: 'home_lbl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get home_search {
+    return Intl.message(
+      'Search',
+      name: 'home_search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total  :  {Total}  LE.`
+  String home_total(Object Total) {
+    return Intl.message(
+      'Total  :  $Total  LE.',
+      name: 'home_total',
+      desc: '',
+      args: [Total],
+    );
+  }
+
+  /// `New Entry`
+  String get home_newEntry {
+    return Intl.message(
+      'New Entry',
+      name: 'home_newEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get home_name {
+    return Intl.message(
+      'Name',
+      name: 'home_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone`
+  String get home_phoneNum {
+    return Intl.message(
+      'Phone',
+      name: 'home_phoneNum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Money`
+  String get home_money {
+    return Intl.message(
+      'Money',
+      name: 'home_money',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Actions`
+  String get home_actions {
+    return Intl.message(
+      'Actions',
+      name: 'home_actions',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
