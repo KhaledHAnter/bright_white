@@ -4,4 +4,4 @@ class SharedPrefsKeys {
   static const String userToken = "userToken";
 }
 
-const kFontFamily = "Comfortaa";
+const kFontFamily = "Cairo";

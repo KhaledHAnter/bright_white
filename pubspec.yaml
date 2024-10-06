@@ -16,7 +16,10 @@ dependencies:
   gap: ^3.0.1
   intl: ^0.19.0
   path: ^1.9.0
+  path_provider: ^2.1.4
+  pdf: ^3.11.1
   pin_code_fields: ^8.0.1
+  printing: ^5.13.3
   shared_preferences: ^2.3.2
   sqflite: ^2.3.3+2
 
@@ -42,17 +45,17 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Comfortaa
+    - family: Cairo
       fonts:
-        - asset: assets/fonts/Comfortaa-Light.ttf
+        - asset: assets/fonts/Cairo-Light.ttf
           weight: 300
-        - asset: assets/fonts/Comfortaa-Regular.ttf
+        - asset: assets/fonts/Cairo-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Comfortaa-Medium.ttf
+        - asset: assets/fonts/Cairo-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Comfortaa-SemiBold.ttf
+        - asset: assets/fonts/Cairo-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Comfortaa-Bold.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
           weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
