@@ -26,38 +26,35 @@ class TabsExpanded extends StatelessWidget {
           const Gap(80),
           Row(
             children: <Widget>[
-              const Spacer(),
-              Text(
-                "الديــــــــــــون",
-                style: Styles.bold24,
-              ),
-              const Gap(12),
               const CircleAvatar(
                 radius: 5,
                 backgroundColor: ColorsManager.mainRed,
               ),
+              const Gap(12),
+              Text(
+                "الديــــــــــــون",
+                style: Styles.bold24,
+              ),
             ],
           ),
           const Gap(24),
           Row(
             children: <Widget>[
-              const Spacer(),
+              const Gap(22),
               Text(
                 "قريــبـــــــــــــاً",
                 style: Styles.bold24,
               ),
-              const Gap(22),
             ],
           ),
           const Gap(24),
           Row(
             children: <Widget>[
-              const Spacer(),
+              const Gap(22),
               Text(
                 "قريــبـــــــــــــاً",
                 style: Styles.bold24,
               ),
-              const Gap(22),
             ],
           ),
         ],

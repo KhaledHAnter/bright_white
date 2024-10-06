@@ -2,6 +2,7 @@ import 'package:bright_white/core/helpers/extentions.dart';
 import 'package:bright_white/core/routing/routes.dart';
 import 'package:bright_white/core/widgets/app_button.dart';
 import 'package:bright_white/features/Auth/data/models/employ_model.dart';
+import 'package:bright_white/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -59,9 +60,9 @@ class AuthForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const Text(
-          "Nice to see you again",
-          style: TextStyle(
+        Text(
+          S.of(context).auth_hello,
+          style: const TextStyle(
               fontSize: 18,
               fontWeight:
                   FontWeight.w600), // Replace Styles.semiBold18 with TextStyle
@@ -71,7 +72,7 @@ class AuthForm extends StatelessWidget {
         _buildPinCodeField(context),
         const Gap(24),
         AppButton(
-          text: "Continue",
+          text: S.of(context).auth_button,
           onTap: () {
             navigationOptions(context);
           },

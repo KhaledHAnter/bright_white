@@ -10,14 +10,14 @@ class HomeView extends StatelessWidget {
       body: SafeArea(
         child: Row(
           children: <Widget>[
-            Expanded(
-              flex: 8,
-              child: HomeViewBody(),
-            ),
             // the tabs will be here
             Expanded(
               flex: 2,
               child: TabsExpanded(),
+            ),
+            Expanded(
+              flex: 8,
+              child: HomeViewBody(),
             ),
           ],
         ),
