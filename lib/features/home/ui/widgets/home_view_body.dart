@@ -14,6 +14,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -591,6 +592,25 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     );
   }
 
+  Future<void> _sendWhatsAppMessage(CustomerModel customer) async {
+    String phone = customer.phone;
+    String message =
+        "مرحبًا ,نرجو منك سداد المبلغ المستحق وقدره ${"${NumberFormat('#,##0').format(customer.money)} ج.م "}في أقرب وقت.\nشكرًا لك.";
+
+    // Construct the WhatsApp URL
+    String url = "https://wa.me/+2$phone?text=${Uri.encodeComponent(message)}";
+
+    // Check if the URL can be launched (i.e., WhatsApp is installed)
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      // Show an error message if WhatsApp is not installed
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('WhatsApp غير مثبت على هذا الجهاز')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -710,6 +730,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     addTransaction: _addTransaction,
                     deleteCustomer: _deleteCustomer,
                     editCustomerPhoneNumber: _editCustomerPhoneNumber,
+                    sendWhatsAppMessage: _sendWhatsAppMessage,
                   );
                 }
               } else {
@@ -726,6 +747,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                 addTransaction: _addTransaction,
                 deleteCustomer: _deleteCustomer,
                 editCustomerPhoneNumber: _editCustomerPhoneNumber,
+                sendWhatsAppMessage: _sendWhatsAppMessage,
               );
             }
           })
@@ -741,13 +763,16 @@ class CustomersListView extends StatelessWidget {
   void Function(CustomerModel customer) addTransaction;
   void Function(CustomerModel customer) editCustomerPhoneNumber;
   void Function(CustomerModel customer) deleteCustomer;
-  CustomersListView(
-      {super.key,
-      required this.customers,
-      required this.showTransactions,
-      required this.addTransaction,
-      required this.deleteCustomer,
-      required this.editCustomerPhoneNumber});
+  void Function(CustomerModel customer) sendWhatsAppMessage;
+  CustomersListView({
+    super.key,
+    required this.customers,
+    required this.showTransactions,
+    required this.addTransaction,
+    required this.deleteCustomer,
+    required this.editCustomerPhoneNumber,
+    required this.sendWhatsAppMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -771,7 +796,7 @@ class CustomersListView extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  NumberFormat('#,##0').format(customer.money),
+                  "${NumberFormat('#,##0').format(customer.money)} ج.م",
                   style: Styles.semiBold18,
                 ),
                 const Spacer(
@@ -794,7 +819,11 @@ class CustomersListView extends StatelessWidget {
                     ),
                     const Gap(16),
                     IconButton(
-                      onPressed: customer.phone.length == 11 ? () {} : null,
+                      onPressed: customer.phone.length == 11
+                          ? () {
+                              sendWhatsAppMessage(customer);
+                            }
+                          : null,
                       icon: Icon(
                         FontAwesomeIcons.whatsapp,
                         color:
